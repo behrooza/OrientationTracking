@@ -22,8 +22,8 @@ class transform:
 
     def inverse_quaternion(self, q):
 
-        q_inverse = self.conjugate_quaternion(q)/(np.sqrt(np.square(q[0]) + np.square(q[1]) +
-                                                          np.square(q[2]) + np.square(q[3])))
+        q_inverse = self.conjugate_quaternion(q)/(np.square(q[0]) + np.square(q[1]) +
+                                                  np.square(q[2]) + np.square(q[3]))
 
         return q_inverse
 
@@ -113,10 +113,6 @@ class transform:
 
         return calibrated_mag
     
-    def refrence_points(self, ):
-    
-        return mag_ref, q_ref
-
     def tilt_correction(self, acc_, gyr_, q_, delta_t, alpha_t):
 
         if np.linalg.norm(gyr_) == 0:
@@ -170,10 +166,11 @@ class transform:
                                              self.inverse_quaternion(q_ref))
 
         # rotating mag recordings from body frame to the world frame
-        theta = np.arctan2(mag_[0], mag_[2])
-        theta_ref = np.arctan2(mag_ref_[0], mag_ref_[2])
+        # mag_ is a quaternion [w, x, y, z]; heading is measured in the world XZ plane
+        theta = np.arctan2(mag_[1], mag_[3])
+        theta_ref = np.arctan2(mag_ref_[1], mag_ref_[3])
 
-        q_c_yaw = self.multiply_quaternions(self.rotation_quaternion((1-alpha_y)*(theta-theta_ref), [0,1,0]), q_tilt)
+        q_c_yaw = self.multiply_quaternions(self.rotation_quaternion((1-alpha_y)*(theta_ref-theta), [0,1,0]), q_tilt)
 
         return q_c_yaw
     
