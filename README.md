@@ -8,7 +8,7 @@ where gravity points along +Y, using a complementary filter for tilt correction
 ## Installation
 
 ```bash
-pip install git+https://github.com/<your-username>/<repo-name>.git
+pip install git+https://github.com/behrooza/OrientationTracking.git
 ```
 
 ## Usage
